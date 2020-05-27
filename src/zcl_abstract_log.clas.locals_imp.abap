@@ -1,29 +1,6 @@
 *"* use this source file for the definition and implementation of
 *"* local helper classes, interface definitions and type
-*"* declarations
-
-class lcl_log_creator implementation.
-  method create_log.
-
-* Adding the log here
-    call function 'BAL_LOG_CREATE'
-      exporting
-        i_s_log      = c_log_header
-      importing
-        e_log_handle = r_log_handle.
-
-** BAL_LOG_CREATE will fill in some additional header data.
-** This FM updates our instance attribute to reflect that.
-    call function 'BAL_LOG_HDR_READ'
-      exporting
-        i_log_handle = r_log_handle
-      importing
-        e_s_log      = c_log_header.
-
-
-
-  endmethod.
-endclass.
+*"* declaration
 
 
 

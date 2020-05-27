@@ -12,6 +12,7 @@ class zcl_abstract_log definition
 
     methods:constructor importing value(i_object)    type  csequence
                                   value(i_subobject) type  csequence
+                                  i_if_log_strategy  type ref to zif_log_strategy optional
                         raising   cx_static_check
                         ,
       get_ms_log_header returning value(r_result) type ty_log_header,
@@ -24,40 +25,32 @@ class zcl_abstract_log definition
     data: mv_log_number type ty_log_number.
 
   private section.
-    methods: create_log importing i_if_log_creator type ref to lif_log_creator optional.
-ENDCLASS.
+  DATA: mo_log_strategy type ref to zif_log_strategy.
+endclass.
 
 
 
-CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
+class zcl_abstract_log implementation.
 
 
   method constructor.
     me->ms_log_header-object = cond #( when i_object is not initial then i_object
-                                      else throw lcx_missing_parameter(  )
-    ).
-    me->ms_log_header-subobject = cond #( when i_subobject is not initial then i_subobject ).
+                                      else throw lcx_missing_parameter(  ) ).
+   me->ms_log_header-subobject = cond #( when i_subobject is not initial then i_subobject ).
 
 
 * Now call the create log method
-*    create_log( ).
-
-  endmethod.
-
-
-  method create_log.
 *   BEGIN- SEAM
-    data(lo_log_creator) = cond #( when i_if_log_creator is bound then i_if_log_creator
-                                        else new lcl_log_creator( )
-     ) .
+   me->mo_log_strategy = cond #( when i_if_log_strategy is bound then i_if_log_strategy
+                                        else new zcl_default_log_strategy( ) ) .
 
+*BEGIN-SEAM
 * Now create the Log!
-    mr_log_handle = i_if_log_creator->create_log(
+    mr_log_handle = me->mo_log_strategy->create_log(
      changing
         c_log_header = ms_log_header
     ).
 *END-SEAM
-
 
   endmethod.
 
@@ -96,7 +89,7 @@ CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
   endmethod.
 
 
-    method get_mr_log_handle.
+  method get_mr_log_handle.
     r_result = me->mr_log_handle.
   endmethod.
 
@@ -111,4 +104,4 @@ CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
   endmethod.
 
 
-ENDCLASS.
+endclass.
