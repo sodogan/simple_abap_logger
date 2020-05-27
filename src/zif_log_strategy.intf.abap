@@ -1,18 +1,18 @@
 interface zif_log_strategy
   public .
 
-  methods: create_log  changing  c_log_header        type zif_log=>ty_log_header
-                       returning value(r_log_handle) type zif_log=>ty_log_handle.
+  methods: create_log  changing  c_log_header        type zcl_abstract_logger=>ty_log_header
+                       returning value(r_log_handle) type zcl_abstract_logger=>ty_log_handle.
 
 
-  methods: add_sy_msg  importing ir_log_handle type zif_log=>ty_log_handle
-                          i_log_level   type zif_log=>ty_log_level
-                  returning value(ro_log) type ref to zif_log.
+  methods: add_sy_msg  importing ir_log_handle type zcl_abstract_logger=>ty_log_handle
+                          i_log_level     type zcl_abstract_logger=>ty_log_level
+                  returning value(ro_log) type ref to zcl_abstract_logger.
 
-  methods: add_msg  importing ir_log_handle type zif_log=>ty_log_handle
-                          i_log_level   type zif_log=>ty_log_level
+  methods: add_msg  importing ir_log_handle type zcl_abstract_logger=>ty_log_handle
+                          i_log_level   type zcl_abstract_logger=>ty_log_level
                           i_text     type c
-                returning value(ro_log) type ref to zif_log.
+                returning value(ro_log) type ref to zcl_abstract_logger.
 
 
 
