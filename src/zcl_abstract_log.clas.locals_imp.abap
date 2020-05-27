@@ -8,7 +8,7 @@ class lcl_test_helper definition.
       importing
         i_msg    type csequence
         i_detail type csequence optional
-          preferred parameter i_msg.
+        .
 
 
     class-methods verify_true

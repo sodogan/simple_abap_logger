@@ -1,5 +1,9 @@
 *"* use this source file for your ABAP unit test classes
-
+*/
+* Test File- Applying TDD
+* Eacg function must be tested accordingly
+*
+*/
 class lct_log definition for testing duration short risk level harmless.
   public section.
   private section.

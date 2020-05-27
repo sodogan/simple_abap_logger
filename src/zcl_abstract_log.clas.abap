@@ -38,6 +38,21 @@ CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
     me->ms_log_header-subobject = cond #( when i_subobject is not initial then i_subobject ).
 
 
+* Adding the log here
+    call function 'BAL_LOG_CREATE'
+      exporting
+        i_s_log      = ms_log_header
+      importing
+        e_log_handle = mr_log_handle.
+
+* BAL_LOG_CREATE will fill in some additional header data.
+* This FM updates our instance attribute to reflect that.
+    call function 'BAL_LOG_HDR_READ'
+      exporting
+        i_log_handle = mr_log_handle
+      importing
+        e_s_log      = ms_log_header.
+
 
   endmethod.
 
