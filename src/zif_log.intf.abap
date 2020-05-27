@@ -15,11 +15,14 @@ interface zif_log
          .
 
 
-  methods: add  importing i_log_level   type ty_log_level
-                returning value(ro_log) type ref to zif_log.
+  methods: add_sy_msg  importing i_log_level   type ty_log_level
+                       returning value(ro_log) type ref to zif_log.
+  methods: add_msg  importing i_log_level   type ty_log_level
+                              i_text   TYPE c
+                    returning value(ro_log) type ref to zif_log.
+
   methods: save returning value(ro_log) type ref to zif_log.
   methods: is_empty returning value(ro_log) type ref to zif_log.
-
   methods: has_errors returning value(ro_log) type ref to zif_log.
   methods: has_warnings returning value(ro_log) type ref to zif_log.
   methods: has_info returning value(ro_log) type ref to zif_log.
