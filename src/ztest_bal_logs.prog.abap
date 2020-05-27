@@ -4,34 +4,52 @@
 *&
 *&---------------------------------------------------------------------*
 report ztest_bal_logs.
-constants: gc_log_object_zmig type string value `ZMIG` ##NO_TEXT.
-constants: gc_log_subobject_arun type string value `ARUN` ##NO_TEXT.
 
 
+*/*
+* Basic Report to test the Logger Functionality
+* Notice the use of the log object
+* You can specify your own log strategy otherwise will use the default
+*/
+class lcl_log_runner definition abstract final.
+  public section.
+    constants: gc_log_object_zmig type string value `ZMIG` ##NO_TEXT.
+    constants: gc_log_subobject_arun type string value `ARUN` ##NO_TEXT.
+
+    class-methods: main.
+
+endclass.
+class lcl_log_runner implementation.
+  method main.
+
+    data: lo_cut type ref to zcl_abstract_logger.
+
+* Testing the class to do the same thing
+    try .
+        lo_cut = new zcl_slg1_logger( i_object = |{ gc_log_object_zmig }|
+                            i_subobject = |{ gc_log_subobject_arun }|
+*                          i_if_log_strategy = lct_stub
+                           ).
+
+*        Try to add a basic error message
+        message e082(oo) with 'test' 'one more' 'timehere' into data(dummy).
+        lo_cut->add_sy_msg( i_log_level = zcl_abstract_logger=>info ).
+
+*   Try to add  a text to the log!
+        lo_cut->add_msg( i_log_level = zcl_abstract_logger=>error i_text = | check second whats up| ).
+
+        call function 'BAPI_TRANSACTION_COMMIT'.
+      catch cx_root into data(lo_exception) .
+        break-point.
+    endtry.
+
+  endmethod.
+endclass.
 
 
 start-of-selection.
-
-  data: lo_cut type ref to zcl_abstract_logger.
-
-* Testing the class to do the same thing
-  try .
-      lo_cut = new zcl_slg1_logger( i_object = |{ gc_log_object_zmig }|
-                          i_subobject = |{ gc_log_subobject_arun }|
-*                          i_if_log_strategy = lct_stub
-                         ).
-
-*        Try to add a basic error message
-      message e082(oo) with 'test' 'one more' 'timehere' into data(dummy).
-      lo_cut->add_sy_msg( i_log_level = zcl_abstract_logger=>info ).
-
-*   Try to add  a text to the log!
-      lo_cut->add_msg( i_log_level = zcl_abstract_logger=>error i_text = | check second whats up| ).
-
-      call function 'BAPI_TRANSACTION_COMMIT'.
-    catch cx_root into data(lo_exception) .
-      break-point.
-  endtry.
+***Run the test code here!
+  lcl_log_runner=>main( ).
 
 
 
