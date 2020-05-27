@@ -20,7 +20,7 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
 
 
   method add_msg.
-    data:   handles_to_save type bal_t_logh.
+    data:   lt_handles_to_save type bal_t_logh.
 
 
     call function 'BAL_LOG_MSG_ADD_FREE_TEXT'
@@ -32,7 +32,7 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
     call function 'BAL_DB_SAVE'
       exporting
         i_save_all     = 'X'
-        i_t_log_handle = handles_to_save
+        i_t_log_handle = lt_handles_to_save
 *      exceptions
 *       log_not_found  = 1
 *       save_not_allowed     = 2
@@ -49,7 +49,9 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
 
 
   method add_sy_msg.
-    data: ls_detailed_msg         type bal_s_msg
+    data: ls_detailed_msg         type bal_s_msg,
+          lt_handles_to_save type bal_t_logh.
+
           .
 *  detailed_msg-context   = formatted_context.
 *      detailed_msg-params    = formatted_params.
@@ -70,27 +72,18 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
 
     call function 'BAL_DB_SAVE'
       exporting
-*       i_client   = SY-MANDT    " Client in which the new log is to be saved
-*       i_in_update_task     = SPACE    " Save in UPDATE TASK
-        i_save_all = abap_true   " Save all logs in memory
-*       i_t_log_handle       =     " Table of log handles
-*       i_2th_connection     = SPACE    " FALSE: No secondary connection
-*       i_2th_connect_commit = SPACE    " FALSE: No COMMIT in module
-*       i_link2job = 'X'    " Boolean Variable (X=true, -=false, space=unknown)
-*      importing
-*       e_new_lognumbers     =     " Table of new log numbers
-*       e_second_connection  =     " Name of Secondary Connection
+        i_save_all     = 'X'
+        i_t_log_handle = lt_handles_to_save
 *      exceptions
-*       log_not_found        = 1
+*       log_not_found  = 1
 *       save_not_allowed     = 2
 *       numbering_error      = 3
-*       others     = 4
+*       others         = 4
       .
     if sy-subrc <> 0.
 *     message id sy-msgid type sy-msgty number sy-msgno
 *                with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
     endif.
-
 
   endmethod.
 

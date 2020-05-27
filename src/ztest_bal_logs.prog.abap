@@ -22,15 +22,15 @@ start-of-selection.
                          ).
 
 *        Try to add a basic error message
-      MESSAGE e010(oo) WITH 'myname' 'lastname' 'kekeke' INTO DATA(dummy).
-      lo_cut->add_sy_msg( i_log_level = zcl_abstract_logger=>error ).
+      message e082(oo) with 'test' 'one more' 'timehere' into data(dummy).
+      lo_cut->add_sy_msg( i_log_level = zcl_abstract_logger=>info ).
 
 *   Try to add  a text to the log!
-      lo_cut->add_msg( i_log_level = zcl_abstract_logger=>error i_text = | am i working?| ).
+      lo_cut->add_msg( i_log_level = zcl_abstract_logger=>error i_text = | check second whats up| ).
 
-
+      call function 'BAPI_TRANSACTION_COMMIT'.
     catch cx_root into data(lo_exception) .
-
+      break-point.
   endtry.
 
 

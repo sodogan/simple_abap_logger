@@ -38,7 +38,6 @@ public section.
     data: mv_log_number type ty_log_number.
 
   private section.
-    data: mo_log_strategy type ref to zif_log_strategy.
 ENDCLASS.
 
 
@@ -69,7 +68,10 @@ CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
 
 
   method CONSTRUCTOR.
-    super->constructor( ).
+    super->constructor(
+                   cond #( when i_if_log_strategy is bound then i_if_log_strategy
+                   else new zcl_default_log_strategy( ) )
+    ).
     ms_log_header-object = cond #( when i_object is not initial then i_object
                                       else throw lcx_missing_parameter(  ) ).
     ms_log_header-subobject = cond #( when i_subobject is not initial then i_subobject ).
@@ -77,8 +79,8 @@ CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
 
 * Now call the create log method
 *   BEGIN- SEAM
-    mo_log_strategy = cond #( when i_if_log_strategy is bound then i_if_log_strategy
-                                         else new zcl_default_log_strategy( ) ) .
+*    mo_log_strategy = cond #( when i_if_log_strategy is bound then i_if_log_strategy
+*                                         else new zcl_default_log_strategy( ) ) .
 
 *BEGIN-SEAM
 * Now create the Log!
