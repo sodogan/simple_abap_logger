@@ -40,7 +40,7 @@ CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
 
 
 * Now call the create log method
-    create_log( ).
+*    create_log( ).
 
   endmethod.
 
@@ -52,11 +52,9 @@ CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
      ) .
 
 * Now create the Log!
-    i_if_log_creator->create_log(
-      exporting
-        is_log_header = ms_log_header
-      importing
-        er_log_handle = mr_log_handle
+    mr_log_handle = i_if_log_creator->create_log(
+     changing
+        c_log_header = ms_log_header
     ).
 *END-SEAM
 
@@ -64,36 +62,10 @@ CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
   endmethod.
 
 
-  method get_mr_log_handle.
-    r_result = me->mr_log_handle.
-  endmethod.
-
-
-  method get_ms_log_header.
-    r_result = me->ms_log_header.
-  endmethod.
-
-
-  method get_mv_log_number.
-    r_result = me->mv_log_number.
-  endmethod.
-
 
   method zif_log~add.
 *How to test!!
-    call function 'BAL_LOG_CREATE'
-      exporting
-        i_s_log      = ms_log_header
-      importing
-        e_log_handle = mr_log_handle.
 
-* BAL_LOG_CREATE will fill in some additional header data.
-* This FM updates our instance attribute to reflect that.
-    call function 'BAL_LOG_HDR_READ'
-      exporting
-        i_log_handle = mr_log_handle
-      importing
-        e_s_log      = ms_log_header.
 
 
   endmethod.
@@ -122,4 +94,21 @@ CLASS ZCL_ABSTRACT_LOG IMPLEMENTATION.
   method zif_log~save.
 
   endmethod.
+
+
+    method get_mr_log_handle.
+    r_result = me->mr_log_handle.
+  endmethod.
+
+
+  method get_ms_log_header.
+    r_result = me->ms_log_header.
+  endmethod.
+
+
+  method get_mv_log_number.
+    r_result = me->mv_log_number.
+  endmethod.
+
+
 ENDCLASS.
