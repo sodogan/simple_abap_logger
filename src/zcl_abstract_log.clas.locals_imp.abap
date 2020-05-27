@@ -2,6 +2,32 @@
 *"* local helper classes, interface definitions and type
 *"* declarations
 
+class lcl_log_creator implementation.
+  method create_log.
+
+* Adding the log here
+    call function 'BAL_LOG_CREATE'
+      exporting
+        i_s_log      = is_log_header
+      importing
+        e_log_handle = er_log_handle.
+
+** BAL_LOG_CREATE will fill in some additional header data.
+** This FM updates our instance attribute to reflect that.
+*    call function 'BAL_LOG_HDR_READ'
+*      exporting
+*        i_log_handle = mr_log_handle
+*      importing
+*        e_s_log      = ms_log_header.
+
+
+
+  endmethod.
+endclass.
+
+
+
+
 class lcl_test_helper definition.
   public section.
     class-methods: fail
