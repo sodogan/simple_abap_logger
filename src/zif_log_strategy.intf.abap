@@ -15,7 +15,7 @@ interface zif_log_strategy
                 returning value(ro_log) type ref to zcl_abstract_logger.
 
 
-
+  METHODS:display_log importing ir_log_handle type zcl_abstract_logger=>ty_log_handle.
   methods search_log_exists  importing i_log_filter           type bal_s_lfil
                              returning
                                        value(r_found_headers) type balhdr_t.

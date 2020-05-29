@@ -14,6 +14,7 @@ CLASS zcl_slg1_logger DEFINITION
     METHODS: has_warnings REDEFINITION.
     METHODS: is_empty REDEFINITION.
     METHODS: save REDEFINITION.
+    METHODS: display_log REDEFINITION.
 
 
     METHODS constructor
@@ -54,7 +55,7 @@ CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
     i_text      = i_text
      ).
 
-   ro_log = me.
+    ro_log = me.
 
   ENDMETHOD.
 
@@ -92,6 +93,11 @@ CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
     ).
 *END-SEAM
 
+  ENDMETHOD.
+
+
+  METHOD display_log.
+    me->mo_log_strategy->display_log( ir_log_handle = mr_log_handle ).
   ENDMETHOD.
 
 

@@ -1,38 +1,38 @@
-class zcl_abstract_logger definition
-  public
-  create public abstract.
+CLASS zcl_abstract_logger DEFINITION
+  PUBLIC
+  CREATE PUBLIC ABSTRACT.
 
-  public section.
-    types: ty_log_level type symsgty.
+  PUBLIC SECTION.
+    TYPES: ty_log_level TYPE symsgty.
     "Currently levels are only E,W or I
-    constants:
-      error   type ty_log_level value 'E',
-      warning type ty_log_level value 'W',
-      info    type ty_log_level value 'I'
+    CONSTANTS:
+      error   TYPE ty_log_level VALUE 'E',
+      warning TYPE ty_log_level VALUE 'W',
+      info    TYPE ty_log_level VALUE 'I'
       .
 
     "Required for the BAL_LOG Functions in SAP
-    types: ty_log_handle type balloghndl,
-           ty_log_number type balognr,
-           ty_log_header type bal_s_log
+    TYPES: ty_log_handle TYPE balloghndl,
+           ty_log_number TYPE balognr,
+           ty_log_header TYPE bal_s_log
            .
 
-    methods: constructor IMPORTING  !I_IF_LOG_STRATEGY type ref to ZIF_LOG_STRATEGY.
-    methods: add_sy_msg abstract importing i_log_level   type ty_log_level
-                                 returning value(ro_log) type ref to zcl_abstract_logger .
-    methods: add_msg   abstract importing i_log_level   type ty_log_level
-                                          i_text        type c
-                                returning value(ro_log) type ref to zcl_abstract_logger.
+    METHODS: constructor IMPORTING  !i_if_log_strategy TYPE REF TO zif_log_strategy.
+    METHODS: add_sy_msg ABSTRACT IMPORTING i_log_level   TYPE ty_log_level
+                                 RETURNING VALUE(ro_log) TYPE REF TO zcl_abstract_logger .
+    METHODS: add_msg   ABSTRACT IMPORTING i_log_level   TYPE ty_log_level
+                                          i_text        TYPE c
+                                RETURNING VALUE(ro_log) TYPE REF TO zcl_abstract_logger.
+    METHODS: display_log ABSTRACT .
+    METHODS: save  ABSTRACT RETURNING VALUE(ro_log) TYPE REF TO zcl_abstract_logger.
+    METHODS: is_empty ABSTRACT RETURNING VALUE(ro_log) TYPE REF TO zcl_abstract_logger.
+    METHODS: has_errors ABSTRACT RETURNING VALUE(ro_log) TYPE REF TO zcl_abstract_logger.
+    METHODS: has_warnings ABSTRACT RETURNING VALUE(ro_log) TYPE REF TO zcl_abstract_logger.
+    METHODS: has_info ABSTRACT RETURNING VALUE(ro_log) TYPE REF TO zcl_abstract_logger.
+  PROTECTED SECTION.
+    DATA: mo_log_strategy TYPE REF TO zif_log_strategy.
 
-    methods: save  abstract returning value(ro_log) type ref to zcl_abstract_logger.
-    methods: is_empty abstract returning value(ro_log) type ref to zcl_abstract_logger.
-    methods: has_errors abstract returning value(ro_log) type ref to zcl_abstract_logger.
-    methods: has_warnings abstract returning value(ro_log) type ref to zcl_abstract_logger.
-    methods: has_info abstract returning value(ro_log) type ref to zcl_abstract_logger.
-  protected section.
-    data: mo_log_strategy type ref to zif_log_strategy.
-
-  private section.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -40,7 +40,7 @@ ENDCLASS.
 CLASS ZCL_ABSTRACT_LOGGER IMPLEMENTATION.
 
 
-  method constructor.
-  mo_log_strategy = i_if_log_strategy.
-  endmethod.
+  METHOD constructor.
+    mo_log_strategy = i_if_log_strategy.
+  ENDMETHOD.
 ENDCLASS.

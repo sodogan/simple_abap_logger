@@ -34,11 +34,14 @@ CLASS lcl_log_runner IMPLEMENTATION.
                            ).
 
 *        Try to add a basic error message
-        MESSAGE e014(oo) WITH 'The current function' 'list' INTO DATA(dummy).
+        MESSAGE e014(oo) WITH 'Istanbul ' 'list' INTO DATA(dummy).
         lo_cut->add_sy_msg( i_log_level = zcl_abstract_logger=>info )->add_msg(
                             i_log_level = zcl_abstract_logger=>warning i_text = |object:{ gc_log_object_zmig }| ).
 *   Try to add  a text to the log!
 *        lo_cut->add_msg( i_log_level = zcl_abstract_logger=>error i_text = |third test| ).
+
+* Display the Log here
+        lo_cut->display_log( ).
 
       CATCH cx_root INTO DATA(lo_exception) .
         BREAK-POINT.
