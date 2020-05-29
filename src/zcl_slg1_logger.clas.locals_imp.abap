@@ -1,41 +1,37 @@
 *"* use this source file for the definition and implementation of
 *"* local helper classes, interface definitions and type
 *"* declaration
-
-
-
-
-class lcl_test_helper definition.
-  public section.
-    class-methods: fail
-      importing
-        i_msg    type csequence
-        i_detail type csequence optional
+CLASS lcl_test_helper DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS: fail
+      IMPORTING
+        i_msg    TYPE csequence
+        i_detail TYPE csequence OPTIONAL
       .
 
 
-    class-methods verify_true
-      importing
-        i_act type abap_bool
-        i_msg type csequence optional
+    CLASS-METHODS verify_true
+      IMPORTING
+        i_act TYPE abap_bool
+        i_msg TYPE csequence OPTIONAL
       .
-  private section.
-endclass.
+  PRIVATE SECTION.
+ENDCLASS.
 
-class lcl_test_helper implementation.
+CLASS lcl_test_helper IMPLEMENTATION.
 
-  method fail.
+  METHOD fail.
     cl_abap_unit_assert=>fail(
         msg    = i_msg     " Description
         detail = i_detail   " Further Description
     ).
-  endmethod.
+  ENDMETHOD.
 
-  method verify_true.
+  METHOD verify_true.
     cl_abap_unit_assert=>assert_true(
      act = i_act
      msg = i_msg
       ).
-  endmethod.
+  ENDMETHOD.
 
-endclass.
+ENDCLASS.

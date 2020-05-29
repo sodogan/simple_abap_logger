@@ -1,43 +1,44 @@
-class ZCL_SLG1_LOGGER definition
-  public
-  final
-  create public INHERITING FROM zcl_abstract_logger.
+CLASS zcl_slg1_logger DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC INHERITING FROM zcl_abstract_logger.
 
-public section.
+  PUBLIC SECTION.
 
 *  interfaces ZIF_LOG .
 
-  METHODS: ADD_MSG REDEFINITION.
-  methods: ADD_SY_MSG REDEFINITION.
-  methods: HAS_ERRORS REDEFINITION.
-  methods: HAS_INFO REDEFINITION.
-  methods: HAS_WARNINGS REDEFINITION.
-  methods: IS_EMPTY REDEFINITION.
-  methods: SAVE REDEFINITION.
+    METHODS: add_msg REDEFINITION.
+    METHODS: add_sy_msg REDEFINITION.
+    METHODS: has_errors REDEFINITION.
+    METHODS: has_info REDEFINITION.
+    METHODS: has_warnings REDEFINITION.
+    METHODS: is_empty REDEFINITION.
+    METHODS: save REDEFINITION.
 
 
-  methods CONSTRUCTOR
-    importing
-      value(I_OBJECT) type CSEQUENCE
-      value(I_SUBOBJECT) type CSEQUENCE
-      !I_IF_LOG_STRATEGY type ref to ZIF_LOG_STRATEGY optional
-    raising
-      CX_STATIC_CHECK .
-  methods GET_MS_LOG_HEADER
-    returning
-      value(R_RESULT) type TY_LOG_HEADER .
-  methods GET_MR_LOG_HANDLE
-    returning
-      value(R_RESULT) type TY_LOG_HANDLE .
-  methods GET_MV_LOG_NUMBER
-    returning
-      value(R_RESULT) type TY_LOG_NUMBER .
-  protected section.
-    data: ms_log_header type ty_log_header.
-    data: mr_log_handle type ty_log_handle.
-    data: mv_log_number type ty_log_number.
+    METHODS constructor
+      IMPORTING
+        VALUE(i_object)    TYPE csequence
+        VALUE(i_subobject) TYPE csequence
+        !i_if_log_strategy TYPE REF TO zif_log_strategy OPTIONAL
+      RAISING
+        cx_static_check .
+    METHODS get_ms_log_header
+      RETURNING
+        VALUE(r_result) TYPE ty_log_header .
+    METHODS get_mr_log_handle
+      RETURNING
+        VALUE(r_result) TYPE ty_log_handle .
+    METHODS get_mv_log_number
+      RETURNING
+        VALUE(r_result) TYPE ty_log_number .
+  PROTECTED SECTION.
 
-  private section.
+  PRIVATE SECTION.
+    DATA: ms_log_header TYPE ty_log_header.
+    DATA: mr_log_handle TYPE ty_log_handle.
+    DATA: mv_log_number TYPE ty_log_number.
+
 ENDCLASS.
 
 
@@ -45,7 +46,7 @@ ENDCLASS.
 CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
 
 
- method add_msg.
+  METHOD add_msg.
 *We can test now based on the injected interface-strategy
     me->mo_log_strategy->add_msg(
     ir_log_handle  = me->mr_log_handle
@@ -53,28 +54,29 @@ CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
     i_text      = i_text
      ).
 
+   ro_log = me.
 
-  endmethod.
+  ENDMETHOD.
 
 
-  method add_sy_msg.
+  METHOD add_sy_msg.
 *We can test now based on the injected interface-strategy
     me->mo_log_strategy->add_sy_msg(
     ir_log_handle  = me->mr_log_handle
     i_log_level = i_log_level ).
 
+    ro_log = me.
+  ENDMETHOD.
 
-  endmethod.
 
-
-  method CONSTRUCTOR.
+  METHOD constructor.
     super->constructor(
-                   cond #( when i_if_log_strategy is bound then i_if_log_strategy
-                   else new zcl_default_log_strategy( ) )
+                   COND #( WHEN i_if_log_strategy IS BOUND THEN i_if_log_strategy
+                   ELSE NEW zcl_default_log_strategy( ) )
     ).
-    ms_log_header-object = cond #( when i_object is not initial then i_object
-                                      else throw lcx_missing_parameter(  ) ).
-    ms_log_header-subobject = cond #( when i_subobject is not initial then i_subobject ).
+    ms_log_header-object = COND #( WHEN i_object IS NOT INITIAL THEN i_object
+                                      ELSE THROW lcx_missing_parameter(  ) ).
+    ms_log_header-subobject = COND #( WHEN i_subobject IS NOT INITIAL THEN i_subobject ).
 
 
 * Now call the create log method
@@ -85,50 +87,50 @@ CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
 *BEGIN-SEAM
 * Now create the Log!
     mr_log_handle = me->mo_log_strategy->create_log(
-     changing
+     CHANGING
         c_log_header = ms_log_header
     ).
 *END-SEAM
 
-  endmethod.
+  ENDMETHOD.
 
 
-  method GET_MR_LOG_HANDLE.
+  METHOD get_mr_log_handle.
     r_result = me->mr_log_handle.
-  endmethod.
+  ENDMETHOD.
 
 
-  method GET_MS_LOG_HEADER.
+  METHOD get_ms_log_header.
     r_result = me->ms_log_header.
-  endmethod.
+  ENDMETHOD.
 
 
-  method GET_MV_LOG_NUMBER.
+  METHOD get_mv_log_number.
     r_result = me->mv_log_number.
-  endmethod.
+  ENDMETHOD.
 
 
-  method has_errors.
+  METHOD has_errors.
 
-  endmethod.
-
-
-  method has_info.
-
-  endmethod.
+  ENDMETHOD.
 
 
-  method has_warnings.
+  METHOD has_info.
 
-  endmethod.
-
-
-  method is_empty.
-
-  endmethod.
+  ENDMETHOD.
 
 
-  method save.
+  METHOD has_warnings.
 
-  endmethod.
+  ENDMETHOD.
+
+
+  METHOD is_empty.
+
+  ENDMETHOD.
+
+
+  METHOD save.
+
+  ENDMETHOD.
 ENDCLASS.
