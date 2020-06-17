@@ -44,7 +44,7 @@ CLASS zcl_simple_logger DEFINITION
     DATA: mo_log_data TYPE ty_log_data.
     METHODS: create_log IMPORTING i_log_header         TYPE ty_log_header
                         RETURNING VALUE(rs_log_handle) TYPE ty_log_handle.
-    METHODS save_log.
+    METHODS save_log EXPORTING ET_HANDLES TYPE BAL_T_LOGH.
     METHODS update_log_header IMPORTING ir_log_handle TYPE ty_log_handle
                               CHANGING  cs_log_header TYPE ty_log_header.
 
@@ -84,7 +84,6 @@ CLASS zcl_simple_logger IMPLEMENTATION.
 
 
   METHOD add_sy_msg.
-    DATA: lt_handles_to_save TYPE bal_t_logh.
 
     ASSERT mo_log_data-log_handle IS BOUND.
 
@@ -101,10 +100,23 @@ CLASS zcl_simple_logger IMPLEMENTATION.
                             time_stmp = lv_time_stamp
                              ).
 
+*Add the log
     CALL FUNCTION 'BAL_LOG_MSG_ADD'
       EXPORTING
         i_log_handle = mo_log_data-log_handle->*
-        i_s_msg      = ls_detailed_msg.
+        i_s_msg      = ls_detailed_msg
+*      IMPORTING
+*        e_msg_was_logged    =                  " Message collected
+      EXCEPTIONS
+        log_not_found       = 1                " Log not found
+        msg_inconsistent    = 2                " Message inconsistent
+        log_is_full         = 3                " Message number 999999 reached. Log is full
+        others              = 4
+      .
+    IF sy-subrc <> 0.
+     MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+       WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+    ENDIF.
 
 
     save_log( ).
@@ -136,7 +148,7 @@ CLASS zcl_simple_logger IMPLEMENTATION.
 
   METHOD create_log.
     DATA: ls_log_handle TYPE balloghndl.
-* Adding the log here
+* Create the log here
     CALL FUNCTION 'BAL_LOG_CREATE'
       EXPORTING
         i_s_log                 = i_log_header                 " Log header data
@@ -196,20 +208,18 @@ CLASS zcl_simple_logger IMPLEMENTATION.
 
   METHOD save_log.
 
-    DATA lt_handles_to_save TYPE bal_t_logh.
-
     CALL FUNCTION 'BAL_DB_SAVE'
       EXPORTING
         i_save_all       = 'X'
-        i_t_log_handle   = lt_handles_to_save
+        i_t_log_handle   = et_handles
       EXCEPTIONS
         log_not_found    = 1
         save_not_allowed = 2
         numbering_error  = 3
         OTHERS           = 4.
     IF sy-subrc <> 0.
-*     message id sy-msgid type sy-msgty number sy-msgno
-*                with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+     message id sy-msgid type sy-msgty number sy-msgno
+                with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
     ENDIF.
 
   ENDMETHOD.
