@@ -1,24 +1,68 @@
-CLASS zcl_default_log_strategy DEFINITION
+CLASS zcl_simple_logger DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    INTERFACES zif_log_strategy.
-    ALIASES: create_log FOR zif_log_strategy~create_log.
-    ALIASES: search_log_exists FOR zif_log_strategy~search_log_exists.
-    ALIASES: add_sy_msg FOR zif_log_strategy~add_sy_msg.
-    ALIASES: add_msg FOR zif_log_strategy~add_msg.
-    ALIASES: display_log FOR zif_log_strategy~display_log.
+    TYPES: ty_log_level TYPE symsgty.
+    "Currently levels are only E,W or I
+    CONSTANTS:
+      error   TYPE ty_log_level VALUE 'E',
+      warning TYPE ty_log_level VALUE 'W',
+      info    TYPE ty_log_level VALUE 'I'
+      .
+    "Required for the BAL_LOG Functions in SAP
+    TYPES: ty_log_handle TYPE balloghndl,
+           ty_log_number TYPE balognr,
+           ty_log_header TYPE bal_s_log
+           .
+
+
+    METHODS: constructor  IMPORTING i_log_header TYPE ty_log_header.
+
+
+    METHODS: add_sy_msg  IMPORTING i_log_level   TYPE ty_log_level.
+    METHODS: add_msg  IMPORTING i_log_level   TYPE ty_log_level
+                                i_text        TYPE c.
+
+
+    METHODS:display_log.
+    METHODS search_log_exists  IMPORTING i_log_filter           TYPE bal_s_lfil
+                               RETURNING
+                                         VALUE(r_found_headers) TYPE balhdr_t.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    DATA: ms_log_header TYPE ty_log_header.
+    DATA: mr_log_handle TYPE ty_log_handle.
+    DATA: mv_log_number TYPE ty_log_number.
+
 ENDCLASS.
 
 
 
-CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
+CLASS zcl_simple_logger IMPLEMENTATION.
 
+
+  METHOD constructor.
+
+* Adding the log here
+* Adding the log here
+    CALL FUNCTION 'BAL_LOG_CREATE'
+      EXPORTING
+        i_s_log      = i_log_header
+      IMPORTING
+        e_log_handle = mr_log_handle.
+
+** BAL_LOG_CREATE will fill in some additional header data.
+** This FM updates our instance attribute to reflect that.
+    CALL FUNCTION 'BAL_LOG_HDR_READ'
+      EXPORTING
+        i_log_handle = mr_log_handle
+      IMPORTING
+        e_s_log      = ms_log_header.
+
+  ENDMETHOD.
 
   METHOD add_msg.
     DATA:   lt_handles_to_save TYPE bal_t_logh.
@@ -26,7 +70,7 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
 
     CALL FUNCTION 'BAL_LOG_MSG_ADD_FREE_TEXT'
       EXPORTING
-        i_log_handle = ir_log_handle
+        i_log_handle = mr_log_handle
         i_msgty      = i_log_level
         i_text       = i_text.
 
@@ -67,7 +111,7 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
 
     CALL FUNCTION 'BAL_LOG_MSG_ADD'
       EXPORTING
-        i_log_handle = ir_log_handle
+        i_log_handle = mr_log_handle
         i_s_msg      = ls_detailed_msg.
 
 
@@ -89,25 +133,7 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD create_log.
 
-* Adding the log here
-* Adding the log here
-    CALL FUNCTION 'BAL_LOG_CREATE'
-      EXPORTING
-        i_s_log      = c_log_header
-      IMPORTING
-        e_log_handle = r_log_handle.
-
-** BAL_LOG_CREATE will fill in some additional header data.
-** This FM updates our instance attribute to reflect that.
-    CALL FUNCTION 'BAL_LOG_HDR_READ'
-      EXPORTING
-        i_log_handle = r_log_handle
-      IMPORTING
-        e_s_log      = c_log_header.
-
-  ENDMETHOD.
 
 
   METHOD display_log.
@@ -131,7 +157,7 @@ CLASS ZCL_DEFAULT_LOG_STRATEGY IMPLEMENTATION.
     ls_display_profile-title             = TEXT-t01.
     ls_display_profile-disvariant-handle = if_cpf_constants=>gc_cpf_message_log.
 
-    INSERT ir_log_handle INTO TABLE lt_log_handle.
+    INSERT mr_log_handle INTO TABLE lt_log_handle.
 
 *   Display BRFplus application log
     CALL FUNCTION 'BAL_DSP_LOG_DISPLAY'

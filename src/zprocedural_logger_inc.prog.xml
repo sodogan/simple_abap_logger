@@ -3,19 +3,13 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZTEST_BAL_LOGS</NAME>
-    <SUBC>1</SUBC>
-    <RLOAD>E</RLOAD>
-    <FIXPT>X</FIXPT>
+    <NAME>ZPROCEDURAL_LOGGER_INC</NAME>
+    <SUBC>I</SUBC>
+    <APPL>S</APPL>
+    <RSTAT>T</RSTAT>
+    <RLOAD>D</RLOAD>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <TPOOL>
-    <item>
-     <ID>R</ID>
-     <ENTRY>Program ZTEST_BAL_LOGS</ENTRY>
-     <LENGTH>22</LENGTH>
-    </item>
-   </TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

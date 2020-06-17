@@ -73,7 +73,7 @@ CLASS ZCL_SLG1_LOGGER IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
                    COND #( WHEN i_if_log_strategy IS BOUND THEN i_if_log_strategy
-                   ELSE NEW zcl_default_log_strategy( ) )
+                   ELSE NEW zcl_default_logger( ) )
     ).
     ms_log_header-object = COND #( WHEN i_object IS NOT INITIAL THEN i_object
                                       ELSE THROW lcx_missing_parameter(  ) ).
